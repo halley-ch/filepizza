@@ -3,7 +3,7 @@ var express = require("express");
 var expressWinston = require("express-winston");
 var fs = require("fs");
 var ice = require("./ice");
-var socketIO = require("socket.io");
+var socketIO = require("socket.io");//(http, { path: '/filepizza/socket.io' });
 var winston = require("winston");
 
 process.on("unhandledRejection", (reason, p) => {
@@ -33,7 +33,7 @@ if (!process.env.QUIET) {
   );
 }
 
-app.get("/app.js", require("./middleware/javascript"));
+app.get("/filepizza/app.js", require("./middleware/javascript"));
 app.use(require("./middleware/static"));
 
 app.use([
@@ -47,17 +47,23 @@ const TRACKERS = process.env.WEBTORRENT_TRACKERS
   : [
     ["wss://tracker.openwebtorrent.com"],
     ["wss://tracker.btorrent.xyz"],
-    ["wss://tracker.fastcast.nz"]
   ];
 
 function bootServer(server) {
+  //var io = socketIO(server);
+  //var io = socketIO(server).connect("/", {path: "/filepizza/socket.io"});
+
+  //var io = socketIO.connect("/", {path: "/filepizza/socket.io"});
   var io = socketIO(server);
+
+  io.set("path","/filepizza/socket.io");
+
   io.set("transports", ["polling"]);
 
-  io.on("connection", function(socket) {
+  io.on("connection", function (socket) {
     var upload = null;
 
-    socket.on("upload", function(metadata, res) {
+    socket.on("upload", function (metadata, res) {
       if (upload) return;
       db.create(socket).then(u => {
         upload = u;
@@ -69,23 +75,23 @@ function bootServer(server) {
       });
     });
 
-    socket.on("trackerConfig", function(_, res) {
-      ice.getICEServers().then(function(iceServers) {
+    socket.on("trackerConfig", function (_, res) {
+      ice.getICEServers().then(function (iceServers) {
         res({ rtcConfig: { iceServers }, announce: TRACKERS });
       });
     });
 
-    socket.on("disconnect", function() {
+    socket.on("disconnect", function () {
       db.remove(upload);
     });
   });
 
-  server.on("error", function(err) {
+  server.on("error", function (err) {
     winston.error(err.message);
     process.exit(1);
   });
 
-  server.listen(port, function(err) {
+  server.listen(port, function (err) {
     var host = server.address().address;
     var port = server.address().port;
     winston.info("FilePizza listening on %s:%s", host, port);

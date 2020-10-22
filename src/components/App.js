@@ -50,10 +50,10 @@ export default class App extends React.Component {
             content="https://file.pizza/images/fb.png"
           />
           <title>FilePizza - Your files, delivered.</title>
-          <link rel="stylesheet" href="/fonts/fonts.css" />
+          <link rel="stylesheet" href="/filepizza/fonts/fonts.css" />
           <Bootstrap data={this.props.data} />
           <script src="https://cdn.jsdelivr.net/webtorrent/latest/webtorrent.min.js" />
-          <script src="/app.js" />
+          <script src="/filepizza/app.js" />
         </FrozenHead>
 
         <body>
