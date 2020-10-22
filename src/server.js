@@ -33,7 +33,7 @@ if (!process.env.QUIET) {
   );
 }
 
-app.get("/filepizza/app.js", require("./middleware/javascript"));
+app.get("/app.js", require("./middleware/javascript"));
 app.use(require("./middleware/static"));
 
 app.use([
@@ -56,7 +56,7 @@ function bootServer(server) {
   //var io = socketIO.connect("/", {path: "/filepizza/socket.io"});
   var io = socketIO(server);
 
-  io.set("path","/filepizza/socket.io");
+  //io.set("path","/filepizza/socket.io");
 
   io.set("transports", ["polling"]);
 
