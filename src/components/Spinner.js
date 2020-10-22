@@ -12,7 +12,7 @@ export default class Spinner extends React.Component {
     return <div className={classes}>
       <img
         alt={this.props.name || this.props.dir}
-        src={`/images/${this.props.dir}.png`}
+        src={`/filepizza/images/${this.props.dir}.png`}
         className="spinner-image" />
 
       {this.props.name === null ? null

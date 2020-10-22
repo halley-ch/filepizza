@@ -56,7 +56,7 @@ function bootServer(server) {
   //var io = socketIO.connect("/", {path: "/filepizza/socket.io"});
   var io = socketIO(server);
 
-  //io.set("path","/filepizza/socket.io");
+  io.set("path","/filepizza/socket.io");
 
   io.set("transports", ["polling"]);
 
